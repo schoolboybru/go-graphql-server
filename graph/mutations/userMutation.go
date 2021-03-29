@@ -6,6 +6,7 @@ import (
 	"github.com/schoolboybru/go-graphql-server/db"
 	"github.com/schoolboybru/go-graphql-server/graph/gqlTypes"
 	"github.com/schoolboybru/go-graphql-server/model"
+	"github.com/schoolboybru/go-graphql-server/util"
 )
 
 func CreateUser() *graphql.Field {
@@ -31,10 +32,16 @@ func CreateUser() *graphql.Field {
 
 			newID := uuid.New()
 
+			hashedPass, err := util.HashPassword(password)
+
+			if err != nil {
+				return nil, err
+			}
+
 			newUser := model.User{
 				Id:       newID,
 				Email:    email,
-				Password: password,
+				Password: hashedPass,
 				UserName: userName,
 			}
 

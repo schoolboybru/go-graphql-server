@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"github.com/schoolboybru/go-graphql-server/model"
 	"os"
 	"strconv"
 )
@@ -47,22 +46,4 @@ func New() (*Db, error) {
 func ConnString(host string, port int, user string, password string ,dbName string) string {
 	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbName)
-}
-
-func (db *Db) CreateUser(user model.User) {
-
-	defer db.Close()
-
-	db.QueryRow("INSERT INTO users(id, email, password, user_name) VALUES ($1, $2, $3, $4)",
-		&user.Id, &user.Email, &user.Password, &user.UserName)
-}
-
-func (db *Db) GetUserByName(userName string) model.User {
-	var user model.User
-	defer db.Close()
-
-	 db.QueryRow("SELECT * FROM USERS WHERE user_name=$1", userName).
-		Scan(&user.Id, &user.Email, &user.Password, &user.UserName)
-
-	return user
 }
